@@ -2,7 +2,6 @@
 <i>A script for downloading images/memes from subreddits to your computer<i>
 
 ## How to setup
-- - -
 1. Create a new reddit account
 
 2. Create a reddit app [here](https://www.reddit.com/prefs/apps)
