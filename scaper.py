@@ -7,9 +7,9 @@ import urllib
 import os
 
 #global variables
-how_many_posts = 1
+how_many_posts = 5
 #options to sort posts by: hot, new, top
-filter_option = 'top'
+filter_option = 'hot'
 
 
 #run everything as a script
