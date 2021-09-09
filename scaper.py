@@ -7,8 +7,9 @@ import urllib
 import os
 
 #global variables
-how_many_posts = 2
-filter_option = 'hot'
+how_many_posts = 1
+#options to sort posts by: hot, new, top
+filter_option = 'top'
 
 
 #run everything as a script
@@ -42,8 +43,10 @@ def getSubreddits():
 #go through each subreddit in subreddits text file and get the url of top 5 posts
 def getUrls(reddit, list):
     global how_many_posts
+    global filter_option
     original_posts = how_many_posts
     urls = []
+    print('\nSorting by: ' + filter_option)
     for sub in list:
         how_many_posts = original_posts
         if sub_exists(reddit, sub):
@@ -52,21 +55,43 @@ def getUrls(reddit, list):
             count = 0
             keepGoing = True
             while keepGoing:
-                for post in subreddit.new():
-                    if count == how_many_posts:
-                        keepGoing = False
-                        break
-                    time.sleep(0.2)
-                    #check if post has image
-                    check = post.url[len(post.url) - 3 :].lower()
-                    if "jpg" not in check and "png" not in check:
-                        #print('did not pass jpg or png test')
-                        #print('the bad url is: ' + post.url)
-                        continue
-                    else:
-                        #print('the accepted url is: ' + post.url)
-                        urls.append(post.url)
-                        count = count + 1
+                if filter_option == 'hot':
+                    for post in subreddit.hot():
+                        if count == how_many_posts:
+                            keepGoing = False
+                            break
+                        time.sleep(0.2)
+                        #check if post has image
+                        check = post.url[len(post.url) - 3 :].lower()
+                        if "jpg" not in check and "png" not in check:
+                            continue
+                        else:
+                            urls.append(post.url)
+                            count = count + 1
+                elif filter_option == 'new':
+                    for post in subreddit.new():
+                        if count == how_many_posts:
+                            keepGoing = False
+                            break
+                        time.sleep(0.2)
+                        check = post.url[len(post.url) - 3 :].lower()
+                        if "jpg" not in check and "png" not in check:
+                            continue
+                        else:
+                            urls.append(post.url)
+                            count = count + 1
+                elif filter_option == 'top':
+                    for post in subreddit.top():
+                        if count == how_many_posts:
+                            keepGoing = False
+                            break
+                        time.sleep(0.2)
+                        check = post.url[len(post.url) - 3 :].lower()
+                        if "jpg" not in check and "png" not in check:
+                            continue
+                        else:
+                            urls.append(post.url)
+                            count = count + 1
         else:
             print('Subreddit: ' + sub + ' does not exist.')
             continue  
@@ -88,7 +113,7 @@ def print_urls(urls):
     for url in urls:
         print('********')
         print(url)        
-
+    
 
 #def download images to folder
 def getImages(urls):
@@ -107,7 +132,7 @@ def getImages(urls):
 
         full_path = "images/" + fileName
         urllib.request.urlretrieve(url, full_path)
-        
+    print('\nFinished')
 
 
 main()
